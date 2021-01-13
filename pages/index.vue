@@ -1,20 +1,27 @@
 <template>
   <div id="app">
     <div class="grid grid-cols-4 gap-4 max-w-screen-lg m-auto">
-      <div v-for="(country, index) in displayList" :key="country + index">
-        <Country :country="country" :class="country.name" />
-      </div>
+      <Country
+        v-lazy-load
+        :country="country"
+        :class="country.name"
+        v-for="(country, index) in displayList"
+        :key="country + index"
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  async asyncData({ route, $axios }) {
-    const displayList = await $axios.$get(
-      "https://restcountries.eu/rest/v2/all"
-    );
-    return { displayList };
+  data() {
+    return {
+      displayList: [],
+    };
+  },
+  async mounted() {
+    const ip = await this.$axios.$get("https://restcountries.eu/rest/v2/all");
+    this.displayList = ip;
   },
 };
 </script>
@@ -25,4 +32,11 @@ export default {
 @apply min-h-screen flex justify-center items-center text-center mx-auto;
 }
 */
+.lazyLoad {
+  opacity: 0;
+  transition: opacity 1s;
+}
+.isLoaded {
+  opacity: 1;
+}
 </style>

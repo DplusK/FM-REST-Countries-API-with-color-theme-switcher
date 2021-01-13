@@ -32,7 +32,7 @@ export default {
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     '@nuxtjs/axios',
-    '@nuxt/image'
+    'nuxt-lazy-load'
   ],
   image: {
     // Options

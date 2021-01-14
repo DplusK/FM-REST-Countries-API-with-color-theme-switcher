@@ -128,13 +128,6 @@ export default {
 </script>
 
 <style lang="scss">
-#__nuxt,
-#__layout {
-  & + div {
-    @apply h-full;
-  }
-  @apply bg-white min-h-screen;
-}
 .info {
   * {
     @apply text-lg;

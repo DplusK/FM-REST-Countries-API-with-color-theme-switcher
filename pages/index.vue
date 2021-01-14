@@ -109,10 +109,6 @@ export default {
 @apply min-h-screen flex justify-center items-center text-center mx-auto;
 }
 */
-#__nuxt,
-#__layout {
-  @apply bg-gray-100;
-}
 .lazyLoad {
   opacity: 0;
   transition: opacity 1s;

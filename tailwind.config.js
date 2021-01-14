@@ -3,11 +3,25 @@ module.exports = {
     // removeDeprecatedGapUtilities: true,
     // purgeLayersByDefault: true,
   },
-  darkMode: true, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   purge: [],
   theme: {
-    extend: {},
+    backgroundColor: theme => ({
+      ...theme('colors'),
+      'light-grey': '#FAFAFA',
+      'dark-light': '#2B3743',
+      'dark-dark': '#202D36',
+    }),
+    extend: {
+      width: {
+        'min': 'min-content'
+      },
+    },
   },
-  variants: {},
+  variants: {
+    textColor: ['group-hover'],
+    transform: ['group-hover'],
+    scale: ['group-hover'],
+  },
   plugins: [],
 }

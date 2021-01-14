@@ -1,13 +1,53 @@
 <template>
-  <div id="app">
-    <div class="grid grid-cols-4 gap-4 max-w-screen-lg m-auto">
-      <Country
-        v-lazy-load
-        :country="country"
-        :class="country.name"
-        v-for="(country, index) in displayList"
-        :key="country + index"
-      />
+  <div class="bg-white dark:bg-dark-dark">
+    <Navbar />
+    <div class="container max-w-screen-xl m-auto">
+      <div class="filter-container flex py-12">
+        <input
+          class="pr-10 pl-5 py-2"
+          type="text"
+          v-model="search"
+          placeholder="Search Here"
+        />
+        <select
+          class="ml-auto px-10 pl-2"
+          name="region"
+          id="region"
+          v-model="selected"
+          @change="selectedRegion"
+        >
+          <option value="">All</option>
+          <option
+            :value="region.toLowerCase()"
+            v-for="region in regionList"
+            :key="region"
+          >
+            {{ region }}
+          </option>
+        </select>
+      </div>
+      <transition name="fade" mode="out-in">
+        <div
+          class="grid grid-cols-4 gap-16"
+          v-if="countryByRegion.length == 0"
+          key="all"
+        >
+          <Country
+            v-lazy-load
+            :country="country"
+            v-for="(country, index) in displayedCountries"
+            :key="country + index"
+          />
+        </div>
+        <div class="grid grid-cols-4 gap-6" v-else key="region">
+          <Country
+            v-lazy-load
+            :country="country"
+            v-for="country in displayedCountriesRegion"
+            :key="country"
+          />
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -16,27 +56,73 @@
 export default {
   data() {
     return {
-      displayList: [],
+      allCountry: [],
+      countryByRegion: [],
+      regionList: [],
+      search: "",
+      selected: "",
     };
   },
-  async mounted() {
-    const ip = await this.$axios.$get("https://restcountries.eu/rest/v2/all");
-    this.displayList = ip;
+  mounted() {
+    this.allCountry = this.$store.state.country.allCountryList;
+    this.allCountry.filter((country) => {
+      if (this.regionList.indexOf(country.region) === -1 && country.region) {
+        this.regionList.push(country.region);
+      }
+    });
+  },
+  methods: {
+    async selectedRegion() {
+      if (!this.selected) return (this.countryByRegion = []);
+      await this.$store.dispatch("country/getRegion", this.selected);
+      this.countryByRegion = this.$store.state.country.regionCountryList;
+    },
+  },
+  computed: {
+    displayedCountries: function () {
+      return this.allCountry.filter(
+        (country) =>
+          country.name.toLowerCase().match(this.search.toLowerCase()) ||
+          country.alpha3Code.toLowerCase().match(this.search.toLowerCase()) ||
+          country.alpha2Code.toLowerCase().match(this.search.toLowerCase())
+      );
+    },
+    displayedCountriesRegion: function () {
+      return this.countryByRegion.filter(
+        (country) =>
+          country.name.toLowerCase().match(this.search.toLowerCase()) ||
+          country.alpha3Code.toLowerCase().match(this.search.toLowerCase()) ||
+          country.alpha2Code.toLowerCase().match(this.search.toLowerCase())
+      );
+    },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 /* Sample `apply` at-rules with Tailwind CSS
 .container {
 @apply min-h-screen flex justify-center items-center text-center mx-auto;
 }
 */
+#__nuxt,
+#__layout {
+  @apply bg-gray-100;
+}
 .lazyLoad {
   opacity: 0;
   transition: opacity 1s;
 }
 .isLoaded {
   opacity: 1;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>

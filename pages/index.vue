@@ -1,16 +1,16 @@
 <template>
-  <div class="bg-white dark:bg-dark-dark">
+  <div class="bg-gray-200 dark:bg-dark-dark min-h-screen">
     <Navbar />
     <div class="container max-w-screen-xl m-auto">
-      <div class="filter-container flex py-12">
+      <div class="filter-container flex py-12 px-4">
         <input
-          class="pr-10 pl-5 py-2"
+          class="pr-10 pl-5 py-2 dark:bg-dark-light dark:text-gray-100"
           type="text"
           v-model="search"
           placeholder="Search Here"
         />
         <select
-          class="ml-auto px-10 pl-2"
+          class="ml-auto px-10 pl-2 dark:bg-dark-light dark:text-gray-100"
           name="region"
           id="region"
           v-model="selected"
@@ -28,7 +28,7 @@
       </div>
       <transition name="fade" mode="out-in">
         <div
-          class="grid grid-cols-4 gap-16"
+          class="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-16 px-4"
           v-if="countryByRegion.length == 0"
           key="all"
         >
@@ -39,12 +39,16 @@
             :key="country + index"
           />
         </div>
-        <div class="grid grid-cols-4 gap-6" v-else key="region">
+        <div
+          class="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-16 px-4"
+          v-else
+          key="region"
+        >
           <Country
             v-lazy-load
             :country="country"
-            v-for="country in displayedCountriesRegion"
-            :key="country"
+            v-for="(country, index) in displayedCountriesRegion"
+            :key="country + index"
           />
         </div>
       </transition>

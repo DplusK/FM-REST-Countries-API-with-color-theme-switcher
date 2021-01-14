@@ -1,11 +1,17 @@
 <template>
-  <div>
+  <div
+    class="min-h-screen h-full bg-gray-200 dark:bg-dark-dark dark:text-gray-100"
+  >
     <Navbar />
-    <div class="individual-country max-w-screen-xl m-auto flex flex-col">
-      <nuxt-link class="px-4 py-2 my-8 w-min rounded-md shadow-md" to="/"
+    <div
+      class="individual-country max-w-md lg:max-w-screen-xl m-auto h-full flex flex-col px-4"
+    >
+      <nuxt-link
+        class="px-4 py-2 my-8 w-min rounded-md shadow-md dark:border-white dark:border bg-white dark:bg-transparent"
+        to="/"
         >Back</nuxt-link
       >
-      <div class="flex">
+      <div class="flex flex-col lg:flex-row">
         <div class="mr-24 max-w-md flex justify-center">
           <img class="object-contain" :src="country.flag" />
         </div>
@@ -53,15 +59,16 @@
               </div>
             </div>
           </div>
+
           <div class="flex flex-wrap mt-10 text-lg;">
             <span class="font-medium py-1 mr-2">Border Countries: </span>
             <nuxt-link
-              :to="country.borders[index].toLowerCase()"
-              class="mr-3 px-3 py-1 border rounded-md shadow-sm mb-2"
-              v-for="(item, index) in border"
-              :key="item"
+              :to="borders[index].alpha3Code.toLowerCase()"
+              class="mr-3 px-3 py-1 border rounded-md shadow-sm mb-2 bg-white dark:bg-transparent"
+              v-for="(border, index) in borders"
+              :key="border"
             >
-              {{ item }}
+              {{ border.name }}
             </nuxt-link>
           </div>
         </div>
@@ -75,22 +82,47 @@ export default {
   transition: "intro",
   data() {
     return {
-      border: [],
+      allCountry: [],
+      borders: [{ name: "name", alpha3Code: "COL" }],
+      country: {
+        name: "Colombia",
+        topLevelDomain: [".co"],
+        capital: "Bogotá",
+        region: "Americas",
+        subregion: "South America",
+        population: 48759958,
+        borders: ["BRA", "ECU", "PAN", "PER", "VEN"],
+        nativeName: "Colombia",
+        currencies: [
+          {
+            code: "COP",
+            name: "Colombian peso",
+            symbol: "$",
+          },
+        ],
+        flag: "https://restcountries.eu/data/col.svg",
+      },
+
+      ip: [],
     };
   },
-  async mounted() {
-    for (const border in this.country.borders) {
-      const ip = await this.$axios.$get(
-        `https://restcountries.eu/rest/v2/alpha/${this.country.borders[border]}`
-      );
-      this.border.push(ip.name);
-    }
+  created() {
+    this.allCountry = this.$store.state.country.allCountryList;
   },
-  async asyncData({ route, $axios }) {
-    const country = await $axios.$get(
-      `https://restcountries.eu/rest/v2/alpha${route.path}`
-    );
-    return { country };
+  async mounted() {
+    await this.$axios
+      .$get(`https://restcountries.eu/rest/v2/alpha${this.$route.path}`)
+      .then((res) => {
+        this.country = res;
+        this.borders = [];
+        for (const cur in res.borders) {
+          this.borders.push(
+            this.allCountry.find(
+              (country) => country.alpha3Code == res.borders[cur]
+            )
+          );
+        }
+      });
   },
 };
 </script>
@@ -98,7 +130,10 @@ export default {
 <style lang="scss">
 #__nuxt,
 #__layout {
-  @apply bg-white;
+  & + div {
+    @apply h-full;
+  }
+  @apply bg-white min-h-screen;
 }
 .info {
   * {

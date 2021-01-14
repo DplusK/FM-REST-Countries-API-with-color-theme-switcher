@@ -1,10 +1,32 @@
 <template>
-  <div class="w-100 px-32 py-4 flex bg-white shadow-sm">
+  <div
+    class="w-100 px-4 lg:px-32 py-4 flex bg-white shadow-sm dark:bg-dark-light dark:text-gray-100"
+  >
     <h1 class="text-xl font-bold">Where in the world?</h1>
-    <button class="ml-auto">Dark Mode</button>
+    <button @click="mode" class="ml-auto toggle-mode">
+      {{ toggle }}
+    </button>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    mode: function () {
+      if (this.$colorMode.value == "light") {
+        this.$colorMode.value = "dark";
+        localStorage.setItem("nuxt-color-mode", "dark");
+      } else {
+        this.$colorMode.value = "light";
+        localStorage.setItem("nuxt-color-mode", "light");
+      }
+    },
+  },
+  computed: {
+    toggle() {
+      if (this.$colorMode.value == "light") return "Dark Mode";
+      else return "Light Mode";
+    },
+  },
+};
 </script>

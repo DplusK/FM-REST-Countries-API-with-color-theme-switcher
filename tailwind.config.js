@@ -6,6 +6,7 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   purge: [],
   theme: {
+    darkSelector: ".dark-mode",
     backgroundColor: theme => ({
       ...theme('colors'),
       'light-grey': '#FAFAFA',
@@ -19,9 +20,29 @@ module.exports = {
     },
   },
   variants: {
-    textColor: ['group-hover'],
-    transform: ['group-hover'],
-    scale: ['group-hover'],
+    textColor: ['group-hover', 'dark'],
+    transform: ['group-hover', 'dark'],
+    scale: ['group-hover', 'dark'],
+    backgroundColor: [
+      "dark",
+      "dark-hover",
+      "dark-group-hover",
+      "dark-even",
+      "dark-odd"
+    ],
+    borderWidth: [
+      'dark'
+    ],
+    borderColor: [
+      'dark'
+    ],
+    textColor: [
+      "dark",
+      "dark-hover",
+      "dark-group-hover",
+      "dark-even",
+      "dark-odd"
+    ],
   },
-  plugins: [],
+  plugins: [require("tailwindcss-dark-mode")()]
 }

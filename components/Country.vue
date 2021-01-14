@@ -1,7 +1,7 @@
 <template>
   <router-link
     :to="`${country.alpha3Code.toLowerCase()}`"
-    class="individual-country bg-white shadow-lg group hover:shadow-2xl transition duration-300"
+    class="individual-country bg-white shadow-lg group hover:shadow-2xl transition duration-300 dark:bg-dark-light dark:text-gray-100"
   >
     <div>
       <div class="h-40 overflow-hidden">

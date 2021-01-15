@@ -21,6 +21,9 @@ export default {
       href: '/favicon.ico'
     }]
   },
+  generate: {
+    dir: 'dist'
+  },
   colorMode: {
 
   },

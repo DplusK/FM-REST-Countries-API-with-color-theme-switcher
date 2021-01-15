@@ -8,6 +8,7 @@
           type="text"
           v-model="search"
           placeholder="Search Here"
+          title="search-bar"
         />
         <select
           class="ml-auto px-10 pl-2 dark:bg-dark-light dark:text-gray-100"
@@ -16,7 +17,7 @@
           v-model="selected"
           @change="selectedRegion"
         >
-          <option value="">All</option>
+          <option value="" title="all">All</option>
           <option
             :value="region.toLowerCase()"
             v-for="region in regionList"

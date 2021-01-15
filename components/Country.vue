@@ -8,6 +8,7 @@
       <img
         class="object-cover h-full w-full ease-out duration-300 transition-transform transform scale-100 group-hover:scale-110"
         :src="country.flag"
+        :alt="country.name"
       />
     </div>
     <div class="p-6">

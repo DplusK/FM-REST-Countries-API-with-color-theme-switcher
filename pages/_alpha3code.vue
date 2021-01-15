@@ -21,7 +21,7 @@
 
       <div class="flex flex-col lg:flex-row" v-else>
         <div class="mr-24 max-w-md flex justify-center">
-          <img class="object-contain" :src="country.flag" />
+          <img class="object-contain" :src="country.flag" :alt="country.name" />
         </div>
         <div class="text-container flex justify-center content-center flex-col">
           <div class="name font-bold text-4xl mb-4">{{ country.name }}</div>

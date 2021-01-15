@@ -26,42 +26,35 @@
           </option>
         </select>
       </div>
-      <transition name="fade" mode="out-in">
-        <div
-          class="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-16 px-4"
-          v-if="countryByRegion.length == 0"
-          key="all"
-        >
-          <Country
-            v-lazy-load
-            :country="country"
-            v-for="(country, index) in displayedCountries"
-            :key="country + index"
-          />
-        </div>
-        <div
-          class="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-16 px-4"
-          v-else
-          key="region"
-        >
-          <Country
-            v-lazy-load
-            :country="country"
-            v-for="(country, index) in displayedCountriesRegion"
-            :key="country + index"
-          />
-        </div>
-      </transition>
+      <div
+        class="grid grid-cols md:grid-cols-2 lg:grid-cols-4 gap-8 xl:gap-16 px-4"
+        key="all"
+      >
+        <Country
+          v-lazy-load
+          :country="country"
+          v-for="(country, index) in displayedCountries.splice(0, 8)"
+          :key="country + index"
+          class="box"
+        />
+        <Country
+          v-lazy-load
+          :country="country"
+          v-for="(country, index) in displayedCountries.splice(8)"
+          :key="country + index"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { gsap } from "gsap";
+
 export default {
   data() {
     return {
       allCountry: [],
-      countryByRegion: [],
       regionList: [],
       search: "",
       selected: "",
@@ -76,10 +69,16 @@ export default {
     });
   },
   methods: {
+    setItemRef(el) {
+      if (el) {
+        this.itemRefs.push(el);
+      }
+    },
     async selectedRegion() {
-      if (!this.selected) return (this.countryByRegion = []);
+      if (!this.selected)
+        return (this.allCountry = this.$store.state.country.allCountryList);
       await this.$store.dispatch("country/getRegion", this.selected);
-      this.countryByRegion = this.$store.state.country.regionCountryList;
+      this.allCountry = this.$store.state.country.regionCountryList;
     },
   },
   computed: {
@@ -91,12 +90,27 @@ export default {
           country.alpha2Code.toLowerCase().match(this.search.toLowerCase())
       );
     },
-    displayedCountriesRegion: function () {
-      return this.countryByRegion.filter(
-        (country) =>
-          country.name.toLowerCase().match(this.search.toLowerCase()) ||
-          country.alpha3Code.toLowerCase().match(this.search.toLowerCase()) ||
-          country.alpha2Code.toLowerCase().match(this.search.toLowerCase())
+  },
+  beforeUpdate() {
+    this.itemRefs = [];
+  },
+  watch: {
+    displayedCountries: () => {
+      gsap.fromTo(
+        ".box",
+        {
+          opacity: 0,
+          ease: "Power2",
+          scale: 1.1,
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          stagger: {
+            each: 0.2,
+          },
+        }
       );
     },
   },
@@ -115,14 +129,5 @@ export default {
 }
 .isLoaded {
   opacity: 1;
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.5s;
-}
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-  transform: translateY(30px);
 }
 </style>

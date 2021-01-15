@@ -11,7 +11,15 @@
         to="/"
         >Back</nuxt-link
       >
-      <div class="flex flex-col lg:flex-row">
+      <p
+        v-if="$fetchState.pending"
+        class="flex h-screen w-full text-2xl text-black dark:text-gray-100 content-center justify-center"
+      >
+        Fetching mountains...
+      </p>
+      <p v-else-if="$fetchState.error">An error occurred :(</p>
+
+      <div class="flex flex-col lg:flex-row" v-else>
         <div class="mr-24 max-w-md flex justify-center">
           <img class="object-contain" :src="country.flag" />
         </div>
@@ -52,7 +60,7 @@
                   >{{ lang.name
                   }}<span
                     v-if="index != country.languages.length - 1"
-                    :key="index"
+                    :key="lang + index"
                     >,
                   </span>
                 </template>
@@ -66,7 +74,7 @@
               :to="borders[index].alpha3Code.toLowerCase()"
               class="mr-3 px-3 py-1 border rounded-md shadow-sm mb-2 bg-white dark:bg-transparent"
               v-for="(border, index) in borders"
-              :key="border"
+              :key="border + index"
             >
               {{ border.name }}
             </nuxt-link>
@@ -83,46 +91,25 @@ export default {
   data() {
     return {
       allCountry: [],
-      borders: [{ name: "name", alpha3Code: "COL" }],
-      country: {
-        name: "Colombia",
-        topLevelDomain: [".co"],
-        capital: "Bogotá",
-        region: "Americas",
-        subregion: "South America",
-        population: 48759958,
-        borders: ["BRA", "ECU", "PAN", "PER", "VEN"],
-        nativeName: "Colombia",
-        currencies: [
-          {
-            code: "COP",
-            name: "Colombian peso",
-            symbol: "$",
-          },
-        ],
-        flag: "https://restcountries.eu/data/col.svg",
-      },
-
+      borders: [],
+      country: [],
       ip: [],
     };
   },
   created() {
     this.allCountry = this.$store.state.country.allCountryList;
   },
-  async mounted() {
-    await this.$axios
-      .$get(`https://restcountries.eu/rest/v2/alpha${this.$route.path}`)
-      .then((res) => {
-        this.country = res;
-        this.borders = [];
-        for (const cur in res.borders) {
-          this.borders.push(
-            this.allCountry.find(
-              (country) => country.alpha3Code == res.borders[cur]
-            )
-          );
-        }
-      });
+  async fetch() {
+    this.country = await fetch(
+      `https://restcountries.eu/rest/v2/alpha${this.$route.path}`
+    ).then((res) => res.json());
+    for (const cur in this.country.borders) {
+      this.borders.push(
+        this.allCountry.find(
+          (country) => country.alpha3Code == this.country.borders[cur]
+        )
+      );
+    }
   },
 };
 </script>
@@ -156,14 +143,30 @@ $t-delay: 300ms;
     transition-property: opacity, transform;
     transition-timing-function: ease-in-out;
   }
+  &::after {
+    top: 50%;
+  }
+}
 
+.light-mode .intro-enter-active,
+.light-mode .intro-leave-active {
   &::before {
-    background-color: #2e2e2e;
+    background-color: #fafafa;
   }
 
   &::after {
-    top: 50%;
-    background-color: #2e2e2e;
+    background-color: #fafafa;
+  }
+}
+
+.dark-mode .intro-enter-active,
+.dark-mode .intro-leave-active {
+  &::before {
+    background-color: #2b3743;
+  }
+
+  &::after {
+    background-color: #2b3743;
   }
 }
 

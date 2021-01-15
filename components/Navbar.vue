@@ -11,8 +11,13 @@
 
 <script>
 export default {
+  mounted() {
+    this.$colorMode.value = localStorage.getItem("nuxt-color-mode");
+    this.$colorMode.preference = localStorage.getItem("nuxt-color-mode");
+  },
   methods: {
     mode: function () {
+      console.log("here");
       if (this.$colorMode.value == "light") {
         this.$colorMode.value = "dark";
         localStorage.setItem("nuxt-color-mode", "dark");

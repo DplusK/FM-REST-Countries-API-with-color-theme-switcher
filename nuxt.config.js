@@ -3,17 +3,17 @@ export default {
   head: {
     title: 'frontend-mentor-3',
     meta: [{
-        charset: 'utf-8'
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1'
-      },
-      {
-        hid: 'description',
-        name: 'description',
-        content: ''
-      }
+      charset: 'utf-8'
+    },
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1'
+    },
+    {
+      hid: 'description',
+      name: 'description',
+      content: ''
+    }
     ],
     link: [{
       rel: 'icon',
@@ -21,7 +21,9 @@ export default {
       href: '/favicon.ico'
     }]
   },
-  colorMode: {},
+  colorMode: {
+
+  },
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
     '@/assets/css/global.scss'
@@ -37,7 +39,6 @@ export default {
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode'
   ],
-
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     '@nuxtjs/axios',

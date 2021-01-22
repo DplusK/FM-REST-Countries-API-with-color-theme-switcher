@@ -32,12 +32,14 @@
         key="all"
       >
         <Country
+          v-lazy-load
           :country="country"
           v-for="(country, index) in displayedCountries.splice(0, 8)"
           :key="country + index"
           class="box"
         />
         <Country
+          v-lazy-load
           :country="country"
           v-for="(country, index) in displayedCountries.splice(8)"
           :key="country + index"
@@ -116,7 +118,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 /* Sample `apply` at-rules with Tailwind CSS
 .container {
 @apply min-h-screen flex justify-center items-center text-center mx-auto;

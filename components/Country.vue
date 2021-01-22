@@ -32,12 +32,7 @@
 </template>
 
 <script>
-import { gsap } from "gsap";
-
 export default {
   props: ["country"],
 };
 </script>
-
-<style>
-</style>
